@@ -1,2 +1,4 @@
 # LeetCode
-Leetcode practice and 
+This folder stores my Leetcode practices scripts
+
+1. SQL 
