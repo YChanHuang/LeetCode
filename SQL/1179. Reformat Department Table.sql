@@ -1,4 +1,13 @@
 SELECT 
+    id, 
+    [Jan]
+    [Feb]
+FROM department
+
+PIVOT(
+    SUM(revenue)
+    FOR [month] IN ([Jan], [Feb])
+)
 
 -- solution2
 SELECT
