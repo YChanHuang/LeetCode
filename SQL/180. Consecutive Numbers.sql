@@ -1,31 +1,20 @@
--- Write an SQL query to find all numbers that appear at least three times consecutively.
---
--- Return the result table in any order.
---
--- 来源：力扣（LeetCode）
--- 链接：https://leetcode-cn.com/problems/consecutive-numbers
--- 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
 
--- The idea is to combine "DISTINCT" and "WHERE"
-
-
--- 1.
+SELECT DISTINCT NUM as `ContinueNumber` FROM (
+SELECT num, COUNT(1) as serialCOUNT FROM
+    (SELECT ID, num,
+    ROW_NUMBER() OVER(ORDER BY id) -
+    ROW_NUMBER() OVER(partition by id ORDER BY id) as SerialNumberGROUP
+    FROM logs) as sub
+GROUP BY NUM, SerialNumberGROUP 
+HAVING COUNT(1) >= 3) as result
 
 
-SELECT DISTINCT
-    l1.Num AS ConsecutiveNums
-FROM
-    Logs l1,
-    Logs l2,
-    Logs l3
-WHERE
-    l1.Id = l2.Id - 1
-    AND l2.Id = l3.Id - 1
-    AND l1.Num = l2.Num
-    AND l2.Num = l3.Num
-;
+-- window function
 
-作者：LeetCode
-链接：https://leetcode-cn.com/problems/consecutive-numbers/solution/lian-xu-chu-xian-de-shu-zi-by-leetcode/
-来源：力扣（LeetCode）
-著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+SELECT distinct num as ContinueNumber 
+FROM 
+(
+    select num, lead(num, 1) OVER() as num1, lead(num, 2) OVER() AS num2
+    FROM logs
+) as t
+Where t.num = t.num1 and t.num1 = t.num2
